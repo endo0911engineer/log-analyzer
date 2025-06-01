@@ -17,7 +17,7 @@ type LogEntry struct {
 	LatencyMs        int    `json:"latency_ms"`
 }
 
-func ParseLogFile(path string) []LogEntry {
+func ParseLogFile(path string) ([]LogEntry, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("failed to open file: %v", err)
@@ -34,5 +34,9 @@ func ParseLogFile(path string) []LogEntry {
 		}
 	}
 
-	return entries
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
 }
